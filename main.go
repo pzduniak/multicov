@@ -13,18 +13,24 @@ import (
 func main() {
 	// custom pattern matching!
 	args := os.Args[1:]
-	var path string
+	paths := []string{}
 	if len(args) != 0 {
-		path = args[len(args)-1]
-		if len(args) == 1 {
-			args = []string{}
-		} else {
-			args = args[:len(args)-1]
+		n := 0
+
+		for i := len(args) - 1; i > -1; i-- {
+			arg := args[i]
+
+			if arg[0] != '-' {
+				paths = append(paths, arg)
+				n++
+			}
 		}
+
+		args = args[:len(args)-n]
 	}
 
 	// i copied half of the go tool for that function
-	resolved := importPaths([]string{path})
+	resolved := importPaths(paths)
 
 	// create a new tmpdir
 	td, err := ioutil.TempDir("", "multicov_")
